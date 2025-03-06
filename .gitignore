@@ -39,7 +39,7 @@ yarn-debug.log*
 app/javascript/components/Footer.jsx
 app/javascript/components/Alert.jsx
 app/javascript/components/LandingPage.jsx
-app/javascript/components/devise/
+app/javascript/components/devise/Registration.jsx
 
 
 # Ignore specific folders
@@ -47,10 +47,4 @@ app/javascript/components/canReusecomponent/
 app/javascript/components/NavLR/
 
 # Ignore specific controller file
-app/controllers/users/
-app/models/user.rb
-db/migrate/20250226061436_devise_create_users.rb
-db/migrate/20250228030839_add_user_id_to_comment.rb
-db/migrate/20250305020408_add_birthday_bio_to_users.rb
-
-config/initializers/devise.rb
+app/controllers/users/registration_controller.rb
