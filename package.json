@@ -1,0 +1,34 @@
+{
+  "name": "trainingApp",
+  "private": true,
+  "dependencies": {
+    "@babel/preset-react": "^7.26.3",
+<<<<<<< HEAD
+    "@heroicons/react": "^2.2.0",
+    "@rails/actioncable": "^6.0.0",
+    "@rails/actiontext": "^6.0.6-1",
+=======
+    "@rails/actioncable": "^6.0.0",
+>>>>>>> feat: Crud app with react-rails
+    "@rails/activestorage": "^6.0.0",
+    "@rails/ujs": "^6.0.0",
+    "@rails/webpacker": "4.3.0",
+    "axios": "0.27.2",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.24",
+    "prop-types": "^15.8.1",
+<<<<<<< HEAD
+    "quill": "^2.0.3",
+=======
+>>>>>>> feat: Crud app with react-rails
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "react-paginate": "^8.3.0",
+    "react-router-dom": "6.14.2",
+<<<<<<< HEAD
+    "sweetalert2": "^11.17.2",
+=======
+>>>>>>> feat: Crud app with react-rails
+    "turbolinks": "^5.2.0"
+  },
+  "version": "0.1.0"
+}

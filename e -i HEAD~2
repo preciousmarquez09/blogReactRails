@@ -1,0 +1,17 @@
+[33m3278930[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m feat: implement login with Devise. Closes #2
+[33m0c74c9c[m feat: CRUD app using react-rails. Closes #1
+[33mce8216b[m add sidenav fix bugs and design
+[33m0625a74[m Fix navbar UI
+[33mb0b5fd8[m Registration function, sweetalert
+[33mc19c882[m Fix login logout, Create view for registration
+[33m4fd3d5e[m Devise Login
+[33mc2c4440[m Delete Comments
+[33m9530453[m Add associated comment
+[33m5593a12[m Adding read me for instruction in installing react-rails
+[33mb112b33[m Adding comments, fix the update
+[33md61fbe2[m Create and Update Post
+[33mc400c39[m Create and Update Post
+[33mc97199a[m ReactAsset initial commit
+[33m7316d17[m Added host on config/database.yml
+[33m769b856[m Modified mysql2 on Gemfile
+[33m5f17cf5[m Initial Commit
