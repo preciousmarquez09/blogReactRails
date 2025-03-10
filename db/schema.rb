@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
 ActiveRecord::Schema.define(version: 2025_03_05_020408) do
-=======
-ActiveRecord::Schema.define(version: 2025_02_26_061436) do
->>>>>>> feat: Crud app with react-rails
 
   create_table "comments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "commenter"
@@ -22,13 +18,9 @@ ActiveRecord::Schema.define(version: 2025_02_26_061436) do
     t.bigint "post_id", null: false
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-<<<<<<< HEAD
     t.bigint "user_id", null: false
     t.index ["post_id"], name: "index_comments_on_post_id"
     t.index ["user_id"], name: "index_comments_on_user_id"
-=======
-    t.index ["post_id"], name: "index_comments_on_post_id"
->>>>>>> feat: Crud app with react-rails
   end
 
   create_table "posts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -51,18 +43,12 @@ ActiveRecord::Schema.define(version: 2025_02_26_061436) do
     t.datetime "locked_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
-<<<<<<< HEAD
     t.date "birthday"
     t.string "bio"
-=======
->>>>>>> feat: Crud app with react-rails
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
   add_foreign_key "comments", "posts"
-<<<<<<< HEAD
   add_foreign_key "comments", "users"
-=======
->>>>>>> feat: Crud app with react-rails
 end

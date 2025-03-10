@@ -37,14 +37,8 @@ yarn-debug.log*
 
 # Ignore specific files
 app/javascript/components/Footer.jsx
-app/javascript/components/Alert.jsx
 app/javascript/components/LandingPage.jsx
-app/javascript/components/devise/Registration.jsx
 
 
 # Ignore specific folders
 app/javascript/components/canReusecomponent/
-app/javascript/components/NavLR/
-
-# Ignore specific controller file
-app/controllers/users/registration_controller.rb

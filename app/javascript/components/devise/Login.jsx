@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-<<<<<<< HEAD
 import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import showAlert from "../Alert";
@@ -7,17 +6,10 @@ import { EnvelopeIcon, LockClosedIcon } from  "@heroicons/react/24/outline";
 
 const Login = ({ onLoginSuccess, refreshCsrfToken }) => {
 
-=======
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
-const Login = ({ onLoginSuccess, refreshCsrfToken }) => {
->>>>>>> feat: Crud app with react-rails
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState(null);
     const navigate = useNavigate();
-<<<<<<< HEAD
 
     // check if user is login, if yes then call the onlogin success to create new csrf then go to post
     // this is useful when we accidentally close the page then goes back again to prevent logging in again
@@ -25,15 +17,6 @@ const Login = ({ onLoginSuccess, refreshCsrfToken }) => {
       const checkAuth = async () => {
         try {
           const response = await axios.get("/users/check_auth");
-=======
-  
-    axios.defaults.withCredentials = true;
-  
-    useEffect(() => {
-      const checkAuth = async () => {
-        try {
-          const response = await axios.get("/users/check_auth", { withCredentials: true });
->>>>>>> feat: Crud app with react-rails
           if (response.data.logged_in) {
             onLoginSuccess();
             navigate("/post");
@@ -45,35 +28,22 @@ const Login = ({ onLoginSuccess, refreshCsrfToken }) => {
       checkAuth();
     }, [onLoginSuccess, navigate]);
   
-<<<<<<< HEAD
     // when user click the login button it sends a request to validate the email and password
     // if successfully login get another csrf token
-=======
->>>>>>> feat: Crud app with react-rails
     const handleLogin = async (e) => {
         e.preventDefault();
         setError(null);
       
         try {
-<<<<<<< HEAD
           await refreshCsrfToken();
       
           const response = await axios.post(
              "/users/sign_in", { user: { email, password } }
-=======
-          await refreshCsrfToken(); // ✅ Ensure we use the latest CSRF token
-      
-          const response = await axios.post(
-            "/users/sign_in",
-            { user: { email, password } },
-            { withCredentials: true }
->>>>>>> feat: Crud app with react-rails
           );
       
           if (response.status === 200) {
             console.log("Login successful:", response.data);
       
-<<<<<<< HEAD
             await refreshCsrfToken();
             
             showAlert("Logged In", "You logged in to your accound", "success");
@@ -100,30 +70,11 @@ const Login = ({ onLoginSuccess, refreshCsrfToken }) => {
         {/* Email Field */}
         <div className="flex items-center border rounded-md mb-5 px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
           <EnvelopeIcon className="w-5 h-5 text-gray-500 mr-3" />
-=======
-            await refreshCsrfToken(); // ✅ Refresh CSRF token again after login
-            onLoginSuccess();
-            navigate("/post");
-          }
-        } catch (err) {
-          console.error("Login error:", err.response?.data || err.message);
-          setError("Invalid email or password. Please try again.");
-        }
-      };
-      
-  
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <h2 className="text-2xl font-bold mb-4">Login</h2>
-        {error && <p className="text-red-500">{error}</p>}
-        <form onSubmit={handleLogin} className="w-80 p-4 border rounded shadow">
->>>>>>> feat: Crud app with react-rails
           <input
             type="email"
             placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-<<<<<<< HEAD
             className="w-full outline-none bg-transparent"
             required
           />
@@ -132,17 +83,11 @@ const Login = ({ onLoginSuccess, refreshCsrfToken }) => {
         {/* Password Field */}
         <div className="flex items-center border rounded-md mb-5 px-3 py-2 focus-within:ring-2 focus-within:ring-blue-400">
           <LockClosedIcon className="w-5 h-5 text-gray-500 mr-3" />
-=======
-            className="w-full p-2 mb-3 border rounded"
-            required
-          />
->>>>>>> feat: Crud app with react-rails
           <input
             type="password"
             placeholder="Password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-<<<<<<< HEAD
             className="w-full outline-none bg-transparent"
             required
           />
@@ -168,16 +113,6 @@ const Login = ({ onLoginSuccess, refreshCsrfToken }) => {
         </p>
       </form>
     </div>
-=======
-            className="w-full p-2 mb-3 border rounded"
-            required
-          />
-          <button type="submit" className="w-full bg-blue-500 text-white p-2 rounded">
-            Login
-          </button>
-        </form>
-      </div>
->>>>>>> feat: Crud app with react-rails
     );
   };
   

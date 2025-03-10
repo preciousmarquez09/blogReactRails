@@ -3,7 +3,6 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-<<<<<<< HEAD
 
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
@@ -47,6 +46,4 @@ class User < ApplicationRecord
       errors.add(:last_name, "must contain only alphabets")
     end
   end
-=======
->>>>>>> feat: Crud app with react-rails
 end

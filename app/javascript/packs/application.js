@@ -23,8 +23,5 @@ document.addEventListener("DOMContentLoaded", () => {
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(<App />);
 });
-<<<<<<< HEAD
 
 require("@rails/actiontext")
-=======
->>>>>>> feat: Crud app with react-rails
