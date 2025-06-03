@@ -36,13 +36,11 @@ INSTALL YARN
 npm install -g yarn
 yarn -v
 
-<<<<<<< HEAD
 yarn add @heroicons/react
 yarn add sweetalert2
+yarn add date-fns@2.16.1
 
 
-=======
->>>>>>> feat: Crud app with react-rails
 
 INSTALL REACT USING REACT-RAILS
 
@@ -54,3 +52,5 @@ rails g react:install
 
 create component
 rails g react:component NameofComponent propsName:propsDataType
+
+rails active_storage:install

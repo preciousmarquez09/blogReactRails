@@ -10,9 +10,12 @@ Rails.application.routes.draw do
     get "/users/check_auth", to: "users/sessions#check_auth"
   end
 
+  resources :reading_lists
   resources :posts do
     resources :comments
   end
+  get "/userPost/:id", to: "posts#userPost"
+  get "/currentUser/:id", to: "posts#current_user_info"
 
   root to: "home#index"
   get '*path', to: 'home#index', constraints: ->(req) { !req.xhr? && req.format.html? }

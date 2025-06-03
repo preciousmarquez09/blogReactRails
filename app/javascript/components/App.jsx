@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, useLocation } from "react-router-dom";
 import axios from "axios";
 import Navbar from "./Navbar";
 import Home from "./Home";
@@ -11,6 +11,8 @@ import Registration from "./devise/Registration";
 import Footer from "./Footer";
 import RightNavbar from "./NavLR/RightNavbar";
 import LandingPage from "./LandingPage";
+import ReadingList from "./readingList/ReadingList";
+import ProfilePage from "./profile/ProfilePage";
 
 
 //it protects from cross site request forgery, rails protect csrf attack by requiring a token for a non-GET requests
@@ -25,7 +27,16 @@ axios.defaults.headers.common["X-CSRF-Token"] = getCsrfToken();
 axios.defaults.withCredentials = true; // allow sending cookies for authentication
 
 const App = () => {
+  return (
+    <Router>
+      <AppContent />
+    </Router>
+  );
+};
+const AppContent = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  
+  const location = useLocation(); 
 
   // Check if the user is logged in and set the state to true if yes
   useEffect(() => {
@@ -35,7 +46,7 @@ const App = () => {
           setIsAuthenticated(true);
         }
       })
-      .catch(() => setIsAuthenticated(false));
+      .catch(() => setIsAuthenticated(false))
   }, []);
 
   // Refresh CSRF token after login / logout, it must be 1 session for 1 token
@@ -63,7 +74,6 @@ const App = () => {
     }
   };
   
-
   // Refresh token after login, then set current user is login
   const handleLoginSuccess = () => {
     setIsAuthenticated(true);
@@ -90,9 +100,6 @@ const App = () => {
   };
 
   return (
-    
-    <>
-    <Router>
       <div className={`flex h-screen  ${isAuthenticated ? "" : "flex-col"}`}>
         {/* Navbar will be a sidebar if logged in, and a top bar if logged out */}
         <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} refreshCsrfToken={refreshCsrfToken} />
@@ -106,6 +113,8 @@ const App = () => {
             <Route path="/edit/:id" element={pageCheck(isAuthenticated, <Form />)} />
             <Route path="/show/:id" element={pageCheck(isAuthenticated, <ShowForm />)} />
             <Route path="/create" element={pageCheck(isAuthenticated, <Form />)} />
+            <Route path="/reading_list" element={pageCheck(isAuthenticated, <ReadingList />)} />
+            <Route path="/profile/:id" element={pageCheck(isAuthenticated, <ProfilePage />)} />
 
             {/* Used when user is not logged in */}
             <Route path="/" element={<LandingPage />} />
@@ -113,16 +122,14 @@ const App = () => {
             <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} refreshCsrfToken={refreshCsrfToken} />} />
           </Routes>
         </div>
-        {isAuthenticated && (
-          <div className="w-1/5  p-4 hidden md:block">
+        {isAuthenticated && !location.pathname.startsWith("/edit/") && location.pathname !== "/create" && !location.pathname.startsWith("/show/") && (
+          <div className="w-1/5 p-4 hidden md:block" key={location.pathname}>
             <RightNavbar />
           </div>
         )}
 
       {!isAuthenticated && ( <Footer /> )}
       </div>
-    </Router>
-    </>
   );
 };
 

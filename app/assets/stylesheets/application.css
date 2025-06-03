@@ -14,11 +14,10 @@
  *= require_self
  */
  body {
-    font-family: 'Poppins', sans-serif;
+  font-family: 'Poppins', sans;
+}
 
-  }
 
-  
   @media (max-width: 768px) {
     .navbar {
       position: fixed;
