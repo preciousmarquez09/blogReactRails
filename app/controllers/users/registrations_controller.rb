@@ -66,10 +66,6 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
 
-<<<<<<< HEAD
-  #serialize data before passing to frontend, edit profile
-=======
->>>>>>> feat: Crud app with react-rails
   def respond_with(resource, _opts = {})
     if resource.persisted?
       render json: UserSerializer.new(resource).as_json, status: :created
