@@ -11,7 +11,6 @@ const PostPreview = ({ id }) => {
     const [posts, setPosts] = useState([]);
     const [readingList, setReadingList] = useState([]);
     const [loading, setLoading] = useState(true);
-
     const [errors, setErrors] = useState([]);
 
     useEffect(() => {
@@ -45,7 +44,7 @@ const PostPreview = ({ id }) => {
                         {/* Profile pic, name, and date */}
                         <div className="flex items-center gap-2">
                             <Link to={`/profile/${p.user.id}`} className="w-10 h-10 flex-shrink-0">
-                            <img className="rounded-full w-full h-full object-cover" src="/assets/img/image.png" alt="Profile" />
+                                <img className="rounded-full w-full h-full object-cover" src="/assets/img/image.png" alt="Profile" />
                             </Link>
                             <div className="flex flex-col">
                             <Link to={`/profile/${p.user.id}`}  className="text-sm font-semibold text-gray-900 dark:text-white hover:underline">
@@ -82,7 +81,7 @@ const PostPreview = ({ id }) => {
                                 {readingList.map(rl => rl.post_id).includes(p.id) ? <BookmarkIconSolid className="h-7 w-7 text-black" /> : <BookmarkIcon className="h-7 w-7" /> }
                             </button>
                         </div>
-                        </div>
+                    </div>
                         <Link to={`/show/${p.id}`}  className="w-full md:w-60 h-40 md:h-48 flex-shrink-0 mt-2 md:mt-0">
                             <img className="rounded-lg w-full h-full object-cover" src={p.coverimg_url || "/assets/img/image.png"} alt="Post Image" />
                         </Link>

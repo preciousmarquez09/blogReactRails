@@ -9,6 +9,16 @@ class CommentsController < ApplicationController
         @comment.commenter = current_user.first_name + " " + current_user.last_name
 
         if @comment.save
+          unless @comment.user == @post.user
+            NewCommentNotifier.with(
+              comment: @comment,
+              post: @post,
+              action: "commented",
+              record_type: @comment.class.name,
+              record_id: @comment.id
+            ).deliver(@post.user)
+
+          end
             render json: @comment, status: :created
         else
             render json: { errors: @comment.errors.full_messages }, status: :unprocessable_entity

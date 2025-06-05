@@ -4,7 +4,9 @@ import axios from "axios";
 import showAlert from "../Alert";
 import CurrentUser from "../devise/CurrentUser";
 import CommentsSection from "./Comment";
+import { fetchReadingList, addReadingList, deleteReadingList } from "../readingList/ReadingListFunction.jsx"
 import { CalendarDaysIcon, HandThumbUpIcon, ChatBubbleLeftRightIcon, BookmarkIcon } from "@heroicons/react/24/outline";
+import { BookmarkIcon as BookmarkIconSolid } from "@heroicons/react/24/solid";
 
 const ShowForm = () => {
   const { id } = useParams();
@@ -17,7 +19,7 @@ const ShowForm = () => {
   const [errors, setErrors] = useState([]);
   const [author, setAuthor] = useState([]);
   const [coverimg, setCoverimg] = useState("");
-
+  const [readingList, setReadingList] = useState([]);
   const [comments, setComments] = useState([]);
   const [commentBody, setCommentBody] = useState("");
 
@@ -104,6 +106,16 @@ const ShowForm = () => {
       setError("Error deleting comment:", error);
     }
   };
+  useEffect(() => {
+          fetchReadingList(setReadingList, setErrors);
+  }, []);
+
+  const handleReadingList = (postId) => {
+          const existingItem = readingList.find(rl => rl.post_id === postId);
+            existingItem ? 
+              deleteReadingList(existingItem.id, setReadingList, readingList, setErrors)
+            : addReadingList(postId, setReadingList, readingList, setErrors);
+      };
 
   return (
     <div className="px-4 sm:px-5 md:px-20 py-6 md:py-10">
@@ -150,8 +162,8 @@ const ShowForm = () => {
               <span>{comments.length}</span>
             </button>
           </div>
-          <button className="flex items-center space-x-1 hover:text-blue-500" onClick={() => console.log("bookmark click")}>
-            <BookmarkIcon className="h-7 w-7" />
+          <button className="flex items-center space-x-1 hover:text-blue-500" onClick={() => handleReadingList(posts.id)}>
+            {readingList.map(rl => rl.post_id).includes(posts.id) ? <BookmarkIconSolid className="h-7 w-7 text-black" /> : <BookmarkIcon className="h-7 w-7" /> }
           </button>
         </div>
         <img className="w-full h-full object-cover mb-10" src={posts.coverimg_url || "/assets/img/image.png"} alt="Cover Image" />

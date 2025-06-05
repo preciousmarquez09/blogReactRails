@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :reading_list, dependent: :destroy
+  has_many :notifications, as: :recipient, dependent: :destroy
 
   validates :first_name, :last_name, :birthday, presence: true
 

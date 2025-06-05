@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { fetchReadingList, addReadingList, deleteReadingList } from "./readingList/ReadingListFunction.jsx"
@@ -13,6 +13,25 @@ function Home() {
   const [errors, setErrors] = useState([]);
   const [currentUser, setcurrentUser] = useState([]);
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1, nextPage: null, prevPage: null });
+
+  const [dropdownOpenId, setDropdownOpenId] = useState(null);
+  const dropdownRefs = useRef({});
+
+  const toggleDropdown = (postId) => {
+    setDropdownOpenId(prev => (prev === postId ? null : postId));
+  };
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const refs = Object.values(dropdownRefs.current);
+      if (!refs.some(ref => ref && ref.contains(event.target))) {
+        setDropdownOpenId(null);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   useEffect(() => { 
     const fetchPosts = async () => {
@@ -95,9 +114,28 @@ function Home() {
                         <span>{p.comments.length}</span>
                       </Link>
                     </div>
-                    <button className="flex items-center space-x-1 hover:text-blue-500" onClick={() => handleReadingList(p.id)} >
-                      {readingList.map(rl => rl.post_id).includes(p.id) ? <BookmarkIconSolid className="h-7 w-7 text-black" /> : <BookmarkIcon className="h-7 w-7" /> }
-                    </button>
+                    <div className="flex items-center space-x-1">
+                      <button onClick={() => handleReadingList(p.id)} className="flex items-center space-x-1 hover:text-blue-500">
+                        {readingList.map(rl => rl.post_id).includes(p.id) ? <BookmarkIconSolid className="h-7 w-7 text-black" /> : <BookmarkIcon className="h-7 w-7" />}
+                      </button>
+
+                      <div className="relative inline-block text-left" ref={(el) => (dropdownRefs.current[p.id] = el)}>
+                        <button onClick={() => toggleDropdown(p.id)} type="button" className="inline-flex items-center p-2 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                          <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                            <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                          </svg>
+                        </button>
+
+                        {dropdownOpenId === p.id && (
+                          <div className="absolute z-10 mt-2 w-32 right-0 bg-white divide-y divide-gray-100 rounded-lg shadow-md dark:bg-gray-700 dark:divide-gray-600">
+                            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+                              <li><a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a></li>
+                              <li><a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a></li>
+                            </ul>
+                          </div>
+                        )}
+                      </div>
+                    </div>
                   </div>
                 </div>
                 <Link to={`/show/${p.id}`}  className="w-full md:w-60 h-40 md:h-48 flex-shrink-0 mt-2 md:mt-0">
