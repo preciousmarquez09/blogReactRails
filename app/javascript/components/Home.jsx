@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import useDebounce from './hooks/useDebounce';
 import { fetchReadingList, addReadingList, deleteReadingList } from "./readingList/ReadingListFunction.jsx"
 import showAlert from "./Alert";
 import { ChatBubbleLeftRightIcon, HandThumbUpIcon, BookmarkIcon, MagnifyingGlassIcon, ArrowLongRightIcon } from "@heroicons/react/24/outline";
@@ -13,9 +14,11 @@ function Home() {
   const [errors, setErrors] = useState([]);
   const [currentUser, setcurrentUser] = useState([]);
   const [pagination, setPagination] = useState({ currentPage: 1, totalPages: 1, nextPage: null, prevPage: null });
-
+  const [searchQuery, setSearchQuery] = useState("");
   const [dropdownOpenId, setDropdownOpenId] = useState(null);
   const dropdownRefs = useRef({});
+
+  const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const toggleDropdown = (postId) => {
     setDropdownOpenId(prev => (prev === postId ? null : postId));
@@ -33,19 +36,29 @@ function Home() {
   }, []);
 
 
-  useEffect(() => { 
+  useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`/posts`);
+        const response = await axios.get('/posts', {
+          params: {
+            'q[title_or_description_or_user_first_name_or_user_last_name_cont]': debouncedSearchQuery
+          }
+        });
         setPosts(response.data.posts);
         setcurrentUser(response.data.current_user);
-      } catch (error) { console.error("Error fetching posts:", error); }
+        console.log("result");
+        console.log(response.data.posts);
+      } catch (error) {
+        console.error("Error fetching posts:", error);
       }
-      fetchPosts(); 
-  }, []);
+    };
+  
+    fetchPosts();
+  }, [debouncedSearchQuery]); 
+  
 
   useEffect(() => {
-          fetchReadingList(setReadingList, setErrors);
+          fetchReadingList("", setReadingList, setErrors);
   }, []);
   
   const handleReadingList = (postId) => {
@@ -53,6 +66,26 @@ function Home() {
       existingItem ? 
         deleteReadingList(existingItem.id, setReadingList, readingList, setErrors)
       : addReadingList(postId, setReadingList, readingList, setErrors);
+  };
+
+  //delete post getting the id
+  const deletePost = async (id) => {
+    setErrors(null);
+    console.log(id);
+    // Wait for the confirmation of sweet alert to resolve
+    const result = await showAlert("Are you sure?", "You won't be able to revert this post!", "warning", "delete");
+  
+    if (!result.isConfirmed) return;
+  
+    try {
+      await axios.delete(`/posts/${id}`); // API request to delete post
+      setPosts(posts.filter((p) => p.id !== id)); // Remove deleted post from state
+  
+      // Show success alert after deletion
+      showAlert("Deleted!", "Post deleted successfully", "success");
+    } catch (error) {
+      setError("Error deleting post:", error);
+    }
   };
 
   return (
@@ -63,7 +96,8 @@ function Home() {
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
             <MagnifyingGlassIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
           </div>
-          <input type="search" id="search" placeholder="Search" className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-3xl focus:ring-gray-300 focus:border-gray-300 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 focus:outline-none" required />
+          <input type="search" value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); }} 
+            id="search" placeholder="Search" className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-3xl focus:ring-gray-300 focus:border-gray-300 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 focus:outline-none" required />
         </div>
       </form>
 
@@ -118,23 +152,33 @@ function Home() {
                       <button onClick={() => handleReadingList(p.id)} className="flex items-center space-x-1 hover:text-blue-500">
                         {readingList.map(rl => rl.post_id).includes(p.id) ? <BookmarkIconSolid className="h-7 w-7 text-black" /> : <BookmarkIcon className="h-7 w-7" />}
                       </button>
+                      {currentUser.id === p.user.id && (
+                        <div className="relative inline-block text-left" ref={(el) => (dropdownRefs.current[p.id] = el)}>
+                          <button onClick={() => toggleDropdown(p.id)} type="button" className="inline-flex items-center p-2 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
+                            <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
+                              <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
+                            </svg>
+                          </button>
 
-                      <div className="relative inline-block text-left" ref={(el) => (dropdownRefs.current[p.id] = el)}>
-                        <button onClick={() => toggleDropdown(p.id)} type="button" className="inline-flex items-center p-2 text-sm font-medium text-gray-900 bg-white rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none dark:text-white focus:ring-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-gray-600">
-                          <svg className="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 3">
-                            <path d="M2 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Zm6.041 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM14 0a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z" />
-                          </svg>
-                        </button>
-
-                        {dropdownOpenId === p.id && (
-                          <div className="absolute z-10 mt-2 w-32 right-0 bg-white divide-y divide-gray-100 rounded-lg shadow-md dark:bg-gray-700 dark:divide-gray-600">
-                            <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
-                              <li><a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Edit</a></li>
-                              <li><a href="#" className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Delete</a></li>
-                            </ul>
-                          </div>
-                        )}
-                      </div>
+                          {dropdownOpenId === p.id && (
+                            <div className="absolute z-10 mt-2 w-32 right-0 bg-white divide-y divide-gray-100 rounded-lg shadow-md dark:bg-gray-700 dark:divide-gray-600">
+                              <ul className="py-1 text-sm text-gray-700 dark:text-gray-200">
+                                <li>
+                                  <Link to={`/edit/${p.id}`} className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                    Edit
+                                  </Link>
+                                </li>
+                                <li className="block w-full text-left px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">
+                                  <button onClick={() => deletePost(p.id)}>
+                                    Delete
+                                  </button>
+                                </li>
+                              
+                              </ul>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>

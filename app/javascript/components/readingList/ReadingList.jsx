@@ -4,6 +4,7 @@ import React, {useState, useEffect} from "react"
 import { Link } from "react-router-dom"
 import axios from "axios";
 import showAlert from "../Alert";
+import useDebounce from '../hooks/useDebounce';
 import { fetchReadingList, deleteReadingList } from "./ReadingListFunction.jsx"
 import { ChatBubbleLeftRightIcon, HandThumbUpIcon, BookmarkIcon, MagnifyingGlassIcon, ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import { BookmarkIcon as BookmarkIconSolid } from "@heroicons/react/24/solid";
@@ -13,10 +14,12 @@ const ReadingList = () => {
 
     const [readingList, setReadingList] = useState([]);
     const [errors, setErrors] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
     useEffect(() => {
-        fetchReadingList(setReadingList, setErrors);
-    }, []);
+        fetchReadingList(debouncedSearchQuery, setReadingList, setErrors);
+    }, [debouncedSearchQuery]);
      
 
     return(
@@ -27,7 +30,8 @@ const ReadingList = () => {
             <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                 <MagnifyingGlassIcon className="w-5 h-5 text-gray-500 dark:text-gray-400" />
             </div>
-            <input type="search" id="search" placeholder="Search" className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-3xl focus:ring-gray-300 focus:border-gray-300 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 focus:outline-none" required />
+                <input type="search" id="search" value={searchQuery} onChange={(e) => { setSearchQuery(e.target.value); }} 
+                placeholder="Search" className="block w-full p-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-3xl focus:ring-gray-300 focus:border-gray-300 dark:bg-gray-700 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 focus:outline-none" required />
             </div>
         </form>        
         <div className="min-h-screen flex flex-col pb-10 items-center">

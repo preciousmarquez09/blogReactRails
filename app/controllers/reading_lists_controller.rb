@@ -4,7 +4,19 @@ class ReadingListsController < ApplicationController
   before_action :set_reading_list, only: [:destroy]
 
   def index
-    @reading_list = @user.reading_list.includes(post: :comments).order(created_at: :desc)
+    # Use params[:q] for ransack search params
+    # We start from posts that belong to the user's reading list
+    posts = Post.joins(:reading_lists)
+                .where(reading_lists: { user_id: @user.id })
+                .includes(:comments, :user)
+  
+    # Apply ransack search on posts with params[:q]
+    @q = posts.ransack(params[:q])
+    filtered_posts = @q.result.order(created_at: :desc)
+  
+    # Get the reading list entries with filtered posts only
+    @reading_list = ReadingList.where(user: @user, post_id: filtered_posts.pluck(:id))
+                               .includes(post: [:comments, :user])
   
     render json: {
       reading_list: @reading_list.as_json(
@@ -20,6 +32,7 @@ class ReadingListsController < ApplicationController
       )
     }
   end
+  
   
   def show
     
