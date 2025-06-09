@@ -12,8 +12,24 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
+  const [notifCount, setNotifCount] = useState();
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchNotifications = async () => {
+      try {
+        const response = await axios.get("/counter");
+        setNotifCount(response.data);
+      } catch (error) {
+        console.error("Failed to fetch notifications:", error);
+      }
+    };
+    fetchNotifications();
+    const intervalId = setInterval(fetchNotifications, 5000);
+      return () => clearInterval(intervalId);
+
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -129,18 +145,24 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
 
           <Link to="/notification" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/notification" ? "font-bold" : "text-black" }`}>
             {location.pathname === "/notification" ? (
-              <div className="relative">
-                <BellIconSolid className="h-7 w-7" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[10px] text-center">
-                  3
-                </span>
-              </div>
+              
+                <div className="relative">
+                  <BellIconSolid className="h-7 w-7" />
+                  {notifCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[10px] text-center">
+                      {notifCount}
+                    </span>
+                  )}
+                </div>
+              
             ) : (
               <div className="relative">
                 <BellIcon className="h-7 w-7" />
-                <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center">
-                  3
-                </span>
+                {notifCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center">
+                    {notifCount}
+                  </span>
+                )}
               </div>
             )}
             {!isSmallScreen && <span className="ml-3">Notification</span>}

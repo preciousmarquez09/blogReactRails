@@ -4,6 +4,7 @@ class Post < ApplicationRecord
     has_many :comments, dependent: :destroy
     has_many :reading_list, dependent: :destroy
     has_one_attached :coverimg
+    has_many :notifications, as: :record, dependent: :destroy
 
     
     validates :title, :body, presence: true

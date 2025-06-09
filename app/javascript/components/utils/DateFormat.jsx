@@ -13,6 +13,7 @@ export const getTimeAgo = (date) => {
     } else if (diffInHours < 24) {
         return `${Math.floor(diffInHours)} hour${Math.floor(diffInHours) !== 1 ? "s" : ""} ago`;
     } else {
-        return createdAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+        return createdAt.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric",  
+                                                        hour: "numeric", minute: "numeric",hour12: true, });
     }
 };

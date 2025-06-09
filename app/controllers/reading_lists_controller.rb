@@ -28,10 +28,23 @@ class ReadingListsController < ApplicationController
   def create
     @readingList = ReadingList.new(reading_list_params)
     @readingList.user = current_user
-    
+    @post = Post.find_by(id: @readingList.post_id)
+  
     if @readingList.save
-      render json: {reading_list: @readingList}, status: :created
+      if @post.user.present? && @readingList.user != @post.user
+  
+        NewCommentNotifier.with(
+          reading_list: @readingList,
+          post: @post,
+          action: "reading_list",
+          record_type: @readingList.class.name,
+          record_id: @readingList.id
+        ).deliver_later(@post.user)
+      end
+  
+      render json: { reading_list: @readingList }, status: :created
     else
+      Rails.logger.error "Failed to save ReadingList: #{@readingList.errors.full_messages}"
       render json: { errors: @readingList.errors.full_messages }, status: :unprocessable_entity
     end
   end
@@ -40,6 +53,7 @@ class ReadingListsController < ApplicationController
     @reading_list.destroy
     head :no_content
   end
+
 
   private
   def set_user

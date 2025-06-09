@@ -16,6 +16,9 @@ Rails.application.routes.draw do
   end
   get "/userPost/:id", to: "posts#userPost"
   get "/currentUser/:id", to: "posts#current_user_info"
+  get "showNotification", to: "notification#index"
+  get "counter", to: "notification#counter"
+  patch "/notifications/:id/read", to: "notification#mark_as_read"
 
   root to: "home#index"
   get '*path', to: 'home#index', constraints: ->(req) { !req.xhr? && req.format.html? }

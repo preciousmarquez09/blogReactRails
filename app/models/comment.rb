@@ -1,7 +1,7 @@
 class Comment < ApplicationRecord
+  belongs_to :post
+  belongs_to :user
+  has_many :notifications, as: :record, dependent: :destroy
 
-  belongs_to :post, dependent: :destroy
-  belongs_to :user, dependent: :destroy
-  
   validates :commenter, :body, presence: true
 end
