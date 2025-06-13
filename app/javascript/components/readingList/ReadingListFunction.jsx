@@ -1,9 +1,13 @@
 import axios from "axios";
 import showAlert from "../Alert";
 
-export const fetchReadingList = async (setReadingList, setErrors) => {
+export const fetchReadingList = async (searchQuery, setReadingList, setErrors) => {
     try {
-        const response = await axios.get("/reading_lists");
+        const response = await axios.get('/reading_lists', {
+            params: {
+              'q[title_or_description_or_user_first_name_or_user_last_name_cont]': searchQuery
+            }
+          });
         setReadingList(response.data.reading_list);
         console.log(response.data.reading_list);
     } catch (error) {

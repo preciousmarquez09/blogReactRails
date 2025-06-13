@@ -16,11 +16,10 @@ class PostsController < ApplicationController
 
 
   def index
-    @posts = Post.all.order(created_at: :desc)
+    @q = Post.ransack(params[:q])
+    @posts = @q.result.includes(:user).order(created_at: :desc)
+  
     render json: {
-      #get posts and pages that sends to the react component
-      #left will be the variable that use to access in react component
-      #right the valus that will be passed
       posts: @posts.as_json(
         include: { user: { only: [:id, :first_name, :last_name] }, comments: {} },
         methods: [:coverimg_url]
@@ -28,6 +27,7 @@ class PostsController < ApplicationController
       current_user: @user ? @user.as_json(only: [:id, :first_name, :last_name, :email]) : {}
     }
   end
+  
 
   def userPost
     user = User.find_by(id: params[:id])
