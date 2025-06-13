@@ -6,6 +6,8 @@ class Post < ApplicationRecord
     has_one_attached :coverimg
     has_many :notifications, as: :record, dependent: :destroy
 
+    acts_as_votable
+
     validates :title, :body, presence: true
 
     #get image url to display
@@ -16,8 +18,18 @@ class Post < ApplicationRecord
     def self.ransackable_attributes(auth_object = nil)
         super + ["title", "description"]
     end
+
     def self.ransackable_associations(auth_object = nil)
         super + ["user"]
-      end
+    end
+
+    def likes_count
+        get_upvotes.size
+    end
+      
+    def liked_by?(user)
+        user ? user.voted_for?(self) : false
+    end
+      
       
 end

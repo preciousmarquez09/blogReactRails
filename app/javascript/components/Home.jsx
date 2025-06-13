@@ -5,7 +5,7 @@ import useDebounce from './hooks/useDebounce';
 import { fetchReadingList, addReadingList, deleteReadingList } from "./readingList/ReadingListFunction.jsx"
 import showAlert from "./Alert";
 import { ChatBubbleLeftRightIcon, HandThumbUpIcon, BookmarkIcon, MagnifyingGlassIcon, ArrowLongRightIcon } from "@heroicons/react/24/outline";
-import { BookmarkIcon as BookmarkIconSolid } from "@heroicons/react/24/solid";
+import { BookmarkIcon as BookmarkIconSolid, HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/solid";
 
 function Home() {
   const [activeTab, setActiveTab] = useState("forYou");
@@ -47,7 +47,7 @@ function Home() {
         setPosts(response.data.posts);
         setcurrentUser(response.data.current_user);
         console.log("result");
-        console.log(response.data.posts);
+        console.log(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
@@ -87,6 +87,30 @@ function Home() {
       setError("Error deleting post:", error);
     }
   };
+
+  
+  const liked = async (postId) => {
+    try {
+      await axios.post(`/posts/${postId}/like`);
+      setPosts(prev => prev.map(post =>
+        post.id === postId ? { ...post, liked_by_current_user: true, likes_count: post.likes_count + 1 } : post
+      ));
+    } catch (error) {
+      setErrors([`Error liking post: ${error.message}`]);
+    }
+  };
+
+  const unlike = async (postId) => {
+    try {
+      await axios.delete(`/posts/${postId}/like`);
+      setPosts(prev => prev.map(post =>
+        post.id === postId ? { ...post, liked_by_current_user: false, likes_count: post.likes_count - 1 } : post
+      ));
+    } catch (err) {
+      setErrors([`Error unliking post: ${err.message}`]);
+    }
+  };
+  
 
   return (
     <>
@@ -139,8 +163,8 @@ function Home() {
                         <span>Learn More</span>
                         <ArrowLongRightIcon className="h-5 w-5" />
                       </Link>
-                      <button className="flex items-center space-x-1 hover:text-blue-500" onClick={() => console.log("like click")}>
-                        <HandThumbUpIcon className="h-5 w-5" />
+                      <button className="flex items-center space-x-1 text-blue-500 hover:text-blue-500" onClick={() => p.liked_by_current_user ? unlike(p.id) : liked(p.id)}>
+                        {p.liked_by_current_user ? <HandThumbUpIconSolid className="h-5 w-5" /> : <HandThumbUpIcon className="h-5 w-5" />}
                         <span>{p.likes_count}</span>
                       </button>
                       <Link to={`/show/${p.id}`}  className="flex items-center space-x-1 hover:text-blue-500">
