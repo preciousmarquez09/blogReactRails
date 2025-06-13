@@ -20,13 +20,22 @@ class PostsController < ApplicationController
     @posts = @q.result.includes(:user).order(created_at: :desc)
   
     render json: {
-      posts: @posts.as_json(
-        include: { user: { only: [:id, :first_name, :last_name] }, comments: {} },
-        methods: [:coverimg_url]
-      ),
-      current_user: @user ? @user.as_json(only: [:id, :first_name, :last_name, :email]) : {}
+      posts: @posts.map { |post|
+        post.as_json(
+          include: {
+            user: { only: [:id, :first_name, :last_name] },
+            comments: {}
+          },
+          methods: [:coverimg_url]
+        ).merge(
+          likes_count: post.likes_count,
+          liked_by_current_user: post.liked_by?(current_user)
+        )
+      },
+      current_user: current_user ? current_user.as_json(only: [:id, :first_name, :last_name, :email]) : {}
     }
   end
+  
   
 
   def userPost

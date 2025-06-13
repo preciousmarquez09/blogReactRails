@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   resources :reading_lists
   resources :posts do
     resources :comments
+    resource :like, only: [:create, :destroy]
   end
   get "/userPost/:id", to: "posts#userPost"
   get "/currentUser/:id", to: "posts#current_user_info"

@@ -9,6 +9,8 @@ class User < ApplicationRecord
   has_many :reading_list, dependent: :destroy
   has_many :notifications, as: :recipient, dependent: :destroy
 
+  acts_as_voter
+
   validates :first_name, :last_name, :birthday, presence: true
 
   validate :first_last_name
