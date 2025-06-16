@@ -5,8 +5,13 @@ class Notification < ApplicationRecord
   belongs_to :record, polymorphic: true, optional: true
 
   before_save :assign_record_reference
+  before_create :assign_user_id
 
   private
+
+  def assign_user_id
+    self.user_id ||= params[:like]&.voter_id
+  end
 
   def assign_record_reference
     return if record_type.present? && record_id.present?

@@ -10,6 +10,8 @@ class Post < ApplicationRecord
 
     validates :title, :body, presence: true
 
+    before_destroy :remove_related_notifications
+
     #get image url to display
     def coverimg_url
         coverimg.attached? ? Rails.application.routes.url_helpers.rails_blob_url(coverimg, only_path: true) : nil
@@ -30,6 +32,15 @@ class Post < ApplicationRecord
     def liked_by?(user)
         user ? user.voted_for?(self) : false
     end
-      
+
+    private
+
+    def remove_related_notifications
+        Notification.where(
+        type: "NewCommentNotifier",
+        record_type: "Like",
+        record_id: self.id
+        ).destroy_all
+    end
       
 end
