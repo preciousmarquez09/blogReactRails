@@ -4,8 +4,9 @@ class LikesController < ApplicationController
     before_action :set_post
 
     def create
-        @post.liked_by current_user
       
+      @post.liked_by current_user
+      unless @post.user_id === current_user.id
         NewCommentNotifier.with(
           like: current_user.votes.find_by(votable: @post, vote_flag: true),
           post: @post,
@@ -20,6 +21,7 @@ class LikesController < ApplicationController
           dislikes_count: @post.get_downvotes.size
         }
       end
+    end
 
       def destroy
         vote = current_user.votes.find_by(votable: @post, vote_flag: true)
@@ -31,7 +33,8 @@ class LikesController < ApplicationController
             recipient: @post.user,
             type: "NewCommentNotifier",
             record_type: "Like",
-            record_id: @post.id
+            record_id: @post.id,
+            user_id: current_user.id
           ).destroy_all
         end
       

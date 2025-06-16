@@ -3,8 +3,9 @@ import { Link } from "react-router-dom"
 import axios from "axios"
 import showAlert from "../Alert"
 import { fetchReadingList, addReadingList, deleteReadingList } from "../readingList/ReadingListFunction.jsx"
+import { handleLike, handleUnlike } from "../like/Like.jsx";
 import { ChatBubbleLeftRightIcon, HandThumbUpIcon, BookmarkIcon, ArrowLongRightIcon } from "@heroicons/react/24/outline";
-import { BookmarkIcon as BookmarkIconSolid } from "@heroicons/react/24/solid";
+import { BookmarkIcon as BookmarkIconSolid, HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/solid";
 
 const PostPreview = ({ id }) => {
 
@@ -66,6 +67,14 @@ const PostPreview = ({ id }) => {
         }
     };
 
+    const liked = async (postId) => {
+        await handleLike(postId, setPosts, setErrors);
+    };
+      
+    const unlike = async (postId) => {
+        await handleUnlike(postId, setPosts, setErrors);
+    };
+
   return (
     <div className="min-h-screen flex flex-col pb-10 items-center">
         <div className="w-full max-w-4xl">
@@ -100,8 +109,8 @@ const PostPreview = ({ id }) => {
                                 <span>Learn More</span>
                                 <ArrowLongRightIcon className="h-5 w-5" />
                             </Link>
-                            <button className="flex items-center space-x-1 hover:text-blue-500" onClick={() => console.log("like click")}>
-                                <HandThumbUpIcon className="h-5 w-5" />
+                            <button className="flex items-center space-x-1 text-blue-500 hover:text-blue-500" onClick={() => p.liked_by_current_user ? unlike(p.id) : liked(p.id)}>
+                                {p.liked_by_current_user ? <HandThumbUpIconSolid className="h-5 w-5" /> : <HandThumbUpIcon className="h-5 w-5" />}
                                 <span>{p.likes_count}</span>
                             </button>
                             <Link to={`/show/${p.id}`}  className="flex items-center space-x-1 hover:text-blue-500">

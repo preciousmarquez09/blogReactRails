@@ -5,8 +5,9 @@ import showAlert from "../Alert";
 import CurrentUser from "../devise/CurrentUser";
 import CommentsSection from "./Comment";
 import { fetchReadingList, addReadingList, deleteReadingList } from "../readingList/ReadingListFunction.jsx"
+import { handleLike, handleUnlike } from "../like/Like.jsx";
 import { CalendarDaysIcon, HandThumbUpIcon, ChatBubbleLeftRightIcon, BookmarkIcon } from "@heroicons/react/24/outline";
-import { BookmarkIcon as BookmarkIconSolid } from "@heroicons/react/24/solid";
+import { BookmarkIcon as BookmarkIconSolid, HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/solid";
 
 const ShowForm = () => {
   const { id } = useParams();
@@ -146,6 +147,14 @@ const ShowForm = () => {
       }
   };
 
+    const liked = async (postId) => {
+      await handleLike(postId, setPosts, setErrors);
+    };
+  
+    const unlike = async (postId) => {
+      await handleUnlike(postId, setPosts, setErrors);
+    };
+
   return (
     <div className="px-4 sm:px-5 md:px-20 py-6 md:py-10">
       <div className="bg-white rounded-lg p-4 sm:p-6 md:p-8 w-full max-w-3xl mx-auto">
@@ -181,9 +190,9 @@ const ShowForm = () => {
 
         <div className="border-t border-b border-gray-100 p-3 mb-5 flex items-center justify-between text-gray-400 mt-auto dark:text-gray-400">
           <div className="flex items-center space-x-4 ">
-            <button className="flex items-center space-x-1 hover:text-blue-500" onClick={() => console.log("like click")}>
-              <HandThumbUpIcon className="h-5 w-5" />
-              <span>10</span>
+            <button className="flex items-center space-x-1 text-blue-500 hover:text-blue-500" onClick={() => posts.liked_by_current_user ? unlike(posts.id) : liked(posts.id)}>
+              {posts.liked_by_current_user ? <HandThumbUpIconSolid className="h-5 w-5" /> : <HandThumbUpIcon className="h-5 w-5" />}
+              <span>{posts.likes_count}</span>
             </button>
             {/* use ref for scrolling to comment when comment button is clicked */}
             <button to="/post" className="flex items-center space-x-1 hover:text-blue-500" onClick={() => commentsRef.current?.scrollIntoView({ behavior: "smooth" })}>

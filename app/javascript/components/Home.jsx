@@ -6,6 +6,7 @@ import { fetchReadingList, addReadingList, deleteReadingList } from "./readingLi
 import showAlert from "./Alert";
 import { ChatBubbleLeftRightIcon, HandThumbUpIcon, BookmarkIcon, MagnifyingGlassIcon, ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import { BookmarkIcon as BookmarkIconSolid, HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/solid";
+import { handleLike, handleUnlike } from "./like/Like.jsx";
 
 function Home() {
   const [activeTab, setActiveTab] = useState("forYou");
@@ -90,25 +91,11 @@ function Home() {
 
   
   const liked = async (postId) => {
-    try {
-      await axios.post(`/posts/${postId}/like`);
-      setPosts(prev => prev.map(post =>
-        post.id === postId ? { ...post, liked_by_current_user: true, likes_count: post.likes_count + 1 } : post
-      ));
-    } catch (error) {
-      setErrors([`Error liking post: ${error.message}`]);
-    }
+    await handleLike(postId, setPosts, setErrors);
   };
 
   const unlike = async (postId) => {
-    try {
-      await axios.delete(`/posts/${postId}/like`);
-      setPosts(prev => prev.map(post =>
-        post.id === postId ? { ...post, liked_by_current_user: false, likes_count: post.likes_count - 1 } : post
-      ));
-    } catch (err) {
-      setErrors([`Error unliking post: ${err.message}`]);
-    }
+    await handleUnlike(postId, setPosts, setErrors);
   };
   
 

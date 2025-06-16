@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2025_06_10_052504) do
+ActiveRecord::Schema.define(version: 2025_06_13_032043) do
 
   create_table "active_storage_attachments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.string "name", null: false
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(version: 2025_06_10_052504) do
     t.datetime "updated_at", precision: 6, null: false
     t.string "record_type"
     t.bigint "record_id"
+    t.integer "user_id"
     t.index ["read_at"], name: "index_notifications_on_read_at"
     t.index ["recipient_type", "recipient_id"], name: "index_notifications_on_recipient_type_and_recipient_id"
     t.index ["record_type", "record_id"], name: "index_notifications_on_record_type_and_record_id"
