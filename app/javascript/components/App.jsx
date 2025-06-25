@@ -14,6 +14,7 @@ import LandingPage from "./LandingPage";
 import ReadingList from "./readingList/ReadingList";
 import ProfilePage from "./profile/ProfilePage";
 import Notification from "./notification/Notification";
+import FriendRequest from "./notification/FriendRequest";
 
 
 //it protects from cross site request forgery, rails protect csrf attack by requiring a token for a non-GET requests
@@ -116,6 +117,7 @@ const AppContent = () => {
             <Route path="/create" element={pageCheck(isAuthenticated, <Form />)} />
             <Route path="/reading_list" element={pageCheck(isAuthenticated, <ReadingList />)} />
             <Route path="/profile/:id" element={pageCheck(isAuthenticated, <ProfilePage />)} />
+            <Route path="/friendRequest" element={pageCheck(isAuthenticated, <FriendRequest />)} />
             <Route path="/notification" element={pageCheck(isAuthenticated, <Notification />)} />
 
             {/* Used when user is not logged in */}

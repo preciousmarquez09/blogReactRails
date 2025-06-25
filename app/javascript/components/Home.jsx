@@ -7,6 +7,7 @@ import showAlert from "./Alert";
 import { ChatBubbleLeftRightIcon, HandThumbUpIcon, BookmarkIcon, MagnifyingGlassIcon, ArrowLongRightIcon } from "@heroicons/react/24/outline";
 import { BookmarkIcon as BookmarkIconSolid, HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/solid";
 import { handleLike, handleUnlike } from "./like/Like.jsx";
+import { handleDeletePost } from "./post/PostFunction.jsx";
 
 function Home() {
   const [activeTab, setActiveTab] = useState("forYou");
@@ -71,24 +72,9 @@ function Home() {
 
   //delete post getting the id
   const deletePost = async (id) => {
-    setErrors(null);
-    console.log(id);
-    // Wait for the confirmation of sweet alert to resolve
-    const result = await showAlert("Are you sure?", "You won't be able to revert this post!", "warning", "delete");
-  
-    if (!result.isConfirmed) return;
-  
-    try {
-      await axios.delete(`/posts/${id}`); // API request to delete post
-      setPosts(posts.filter((p) => p.id !== id)); // Remove deleted post from state
-  
-      // Show success alert after deletion
-      showAlert("Deleted!", "Post deleted successfully", "success");
-    } catch (error) {
-      setError("Error deleting post:", error);
-    }
+    await handleDeletePost(id, setPosts, setErrors);
+    showAlert("Deleted!", "Post deleted successfully", "success");
   };
-
   
   const liked = async (postId) => {
     await handleLike(postId, setPosts, setErrors);

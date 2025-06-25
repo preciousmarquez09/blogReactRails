@@ -16,7 +16,8 @@ class Notification < ApplicationRecord
   def assign_record_reference
     return if record_type.present? && record_id.present?
 
-    record_param = params[:record] || params[:reading_list] || params[:comment] 
+    record_param = params[:record] || params[:reading_list] || params[:comment]
+    
     #record = GlobalID::Locator.locate(record_param) if record_param.is_a?(String) || record_param.is_a?(GlobalID)
 
     if record_param.is_a?(Hash) && record_param['_aj_globalid']

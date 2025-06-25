@@ -11,7 +11,12 @@ class PostsController < ApplicationController
 
   def current_user_info
     user = User.find_by(id: params[:id])
-    render json: { user: user, current_user: current_user }
+    render json: { user: user, current_user: current_user, 
+    already_sent_request: current_user.sent_follow_request_to?(user),
+    already_following: current_user.following?(user),
+    received_request: user.sent_follow_request_to?(current_user),
+    mutual_following: current_user.mutual_following_with?(user),
+    they_follow_me: user.following?(current_user) }
   end
 
 
@@ -36,8 +41,6 @@ class PostsController < ApplicationController
     }
   end
   
-  
-
   def userPost
     user = User.find_by(id: params[:id])
     

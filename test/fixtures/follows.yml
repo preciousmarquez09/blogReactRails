@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  follower: one
+  follower_type: Follower
+  followee: one
+  followee_type: Followee
+
+two:
+  follower: two
+  follower_type: Follower
+  followee: two
+  followee_type: Followee

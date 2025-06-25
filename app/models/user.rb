@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+
+  
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -10,6 +12,7 @@ class User < ApplicationRecord
   has_many :notifications, as: :recipient, dependent: :destroy
 
   acts_as_voter
+  followability
 
   validates :first_name, :last_name, :birthday, presence: true
 
@@ -20,6 +23,16 @@ class User < ApplicationRecord
 
   validates :password, confirmation: true
 
+  has_many :follows, as: :follower, dependent: :destroy
+  has_many :followed_users, through: :follows, source: :followee, source_type: 'User'
+
+  has_many :reverse_follows, as: :followee, class_name: 'Follow', dependent: :destroy
+  has_many :followers, through: :reverse_follows, source: :follower, source_type: 'User'
+
+  def mutual_following_with?(other)
+    self.following?(other) && other.following?(self)
+  end
+  
   private
 
   def email_regex
@@ -50,4 +63,6 @@ class User < ApplicationRecord
       errors.add(:last_name, "must contain only alphabets")
     end
   end
+
+
 end

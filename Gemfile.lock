@@ -1,3 +1,10 @@
+GIT
+  remote: https://github.com/nejdetkadir/followability.git
+  revision: 20819c924271bd74bcd5df845729c9a2906085f6
+  branch: main
+  specs:
+    followability (1.1.1)
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -277,6 +284,7 @@ DEPENDENCIES
   byebug
   capybara (>= 2.15)
   devise (~> 4.9, >= 4.9.4)
+  followability!
   jbuilder (~> 2.7)
   jsonapi-serializer (~> 2.2)
   listen (~> 3.2)
