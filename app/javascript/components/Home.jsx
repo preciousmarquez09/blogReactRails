@@ -20,6 +20,7 @@ function Home() {
   const [dropdownOpenId, setDropdownOpenId] = useState(null);
   const dropdownRefs = useRef({});
 
+
   const debouncedSearchQuery = useDebounce(searchQuery, 500);
 
   const toggleDropdown = (postId) => {
@@ -43,20 +44,20 @@ function Home() {
       try {
         const response = await axios.get('/posts', {
           params: {
-            'q[title_or_description_or_user_first_name_or_user_last_name_cont]': debouncedSearchQuery
+            'q[title_or_description_or_user_first_name_or_user_last_name_cont]': debouncedSearchQuery,
+            tab: activeTab // <-- send active tab as param
           }
         });
         setPosts(response.data.posts);
         setcurrentUser(response.data.current_user);
-        console.log("result");
-        console.log(response.data);
       } catch (error) {
         console.error("Error fetching posts:", error);
       }
     };
   
     fetchPosts();
-  }, [debouncedSearchQuery]); 
+  }, [debouncedSearchQuery, activeTab]);
+  
   
 
   useEffect(() => {

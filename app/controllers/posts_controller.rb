@@ -11,18 +11,36 @@ class PostsController < ApplicationController
 
   def current_user_info
     user = User.find_by(id: params[:id])
-    render json: { user: user, current_user: current_user, 
+    render json: { user: user, current_user: current_user,
+    total_likes: user.total_votes_received, 
     already_sent_request: current_user.sent_follow_request_to?(user),
     already_following: current_user.following?(user),
     received_request: user.sent_follow_request_to?(current_user),
     mutual_following: current_user.mutual_following_with?(user),
-    they_follow_me: user.following?(current_user) }
+    they_follow_me: user.following?(current_user),
+    following_count: user.following.count,
+    followers_count: user.followers_count.count,
+    following_users: user.following,
+    followers_users: user.followers,
+    current_user_followers_id: current_user.followers.pluck(:id),
+    current_user_following_id: current_user.following.pluck(:id),
+    current_user_pending_request: current_user.pending_requests.pluck(:followable_id),
+    current_user_follow_request: current_user.follow_requests.pluck(:followerable_id)
+   }
   end
 
 
   def index
     @q = Post.ransack(params[:q])
-    @posts = @q.result.includes(:user).order(created_at: :desc)
+    posts_scope = @q.result.includes(:user)
+  
+    if params[:tab] == "following"
+      # Show posts from users the current user follows
+      following_ids = current_user.following.pluck(:id)
+      posts_scope = posts_scope.where(user_id: following_ids)
+    end
+  
+    @posts = posts_scope.order(created_at: :desc)
   
     render json: {
       posts: @posts.map { |post|
@@ -40,6 +58,7 @@ class PostsController < ApplicationController
       current_user: current_user ? current_user.as_json(only: [:id, :first_name, :last_name, :email]) : {}
     }
   end
+  
   
   def userPost
     user = User.find_by(id: params[:id])

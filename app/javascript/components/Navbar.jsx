@@ -135,10 +135,13 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
             {location.pathname === "/home" ? ( <HomeIconSolid className="h-7 w-7" /> ) : ( <HomeIcon className="h-7 w-7" /> )}
             {!isSmallScreen && <span className="ml-3">Home</span>}
           </Link>
+
+          {/*
           <Link to="/post" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/post" ? "font-bold" : "text-black"}`}>
           {location.pathname === "/post" ? ( <DocumentTextIconSolid className="h-7 w-7" /> ) : ( <DocumentTextIcon className="h-7 w-7" /> )}
             {!isSmallScreen && <span className="ml-3">Post</span>}
           </Link>
+          */}
 
           <Link to="/reading_list" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/reading_list" ? "font-bold" : "text-black"}`}>
           {location.pathname === "/reading_list" ? ( <BookMarkIconSolid className="h-7 w-7" /> ) : ( <BookmarkIcon className="h-7 w-7" /> )}
@@ -170,7 +173,7 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
             {!isSmallScreen && <span className="ml-3">Notification</span>}
           </Link>
 
-          <Link to="/friendRequest" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/notification" ? "font-bold" : "text-black" }`}>
+          <Link to="/friendRequest" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/friendRequest" ? "font-bold" : "text-black" }`}>
             {location.pathname === "/friendRequest" ? (
               
                 <div className="relative">

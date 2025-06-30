@@ -1,13 +1,18 @@
 class NotificationController < ApplicationController
   def index
-    notifications = current_user.notifications.order(created_at: :desc)
+    limit = params[:limit].to_i > 0 ? params[:limit].to_i : 10
+    offset = params[:offset].to_i || 0
+  
+    notifications = current_user.notifications
+                                .order(created_at: :desc)
+                                .offset(offset)
+                                .limit(limit)
   
     render json: notifications.map { |n|
       notif = n.to_notification
       params = n.params
       actor_user = nil
   
-      # Handle actor extraction
       if params[:comment].is_a?(Comment)
         actor_user = User.find_by(id: params[:comment].user_id)
       elsif params[:reading_list].is_a?(ReadingList)
@@ -19,7 +24,7 @@ class NotificationController < ApplicationController
       actor_data = actor_user && {
         id: actor_user.id,
         name: "#{actor_user.first_name} #{actor_user.last_name}",
-        #coverimg_url: actor_user.coverimg.attached? ? url_for(actor_user.coverimg) : nil
+        # coverimg_url: actor_user.coverimg.attached? ? url_for(actor_user.coverimg) : nil
       }
   
       post = params[:post]
@@ -45,6 +50,7 @@ class NotificationController < ApplicationController
       }
     }
   end
+  
   
 
   def friendRequest

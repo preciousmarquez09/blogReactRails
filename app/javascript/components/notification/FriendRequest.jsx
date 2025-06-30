@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { getTimeAgo } from '../utils/DateFormat.jsx'; 
-import { Navigate, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const FriendRequest = () => {
     const [friendRequest, setfriendRequest] = useState([]);
@@ -92,7 +92,7 @@ const FriendRequest = () => {
                   e.stopPropagation();
                   accept(friend.followerable_id);
                 }}
-                className="px-4 py-1 text-sm text-white bg-green-600 rounded hover:bg-green-700"
+                className="px-4 py-1 text-sm text-white bg-blue-600 rounded hover:bg-blue-700"
               >
                 Accept
               </button>
@@ -101,7 +101,7 @@ const FriendRequest = () => {
                   e.stopPropagation();
                   decline(friend.followerable_id);
                 }}
-                className="px-4 py-1 text-sm text-white bg-red-600 rounded hover:bg-red-700"
+                className="px-4 py-1 text-sm text-white bg-gray-600 rounded hover:bg-gray-700"
               >
                 Decline
               </button>

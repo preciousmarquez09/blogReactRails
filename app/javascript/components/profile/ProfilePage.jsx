@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import PostPreview from "../post/PostPreview.jsx";
 
 const ProfilePage = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const [user, setUser] = useState({});
   const [currentUser, setCurrentUser] = useState({});
@@ -18,6 +19,9 @@ const ProfilePage = () => {
   const [alreadyFollowing, setAlreadyFollowing] = useState(false);
   const [theyFollowMe, setTheyFollowMe] = useState(false);
 
+  const [followersCount, setFollowersCount] = useState(0);
+  const [followingCount, setFollowingCount] = useState(0);
+  const [totalLikes, setTotalLikes] = useState([]);
 
 
   useEffect(() => {
@@ -31,10 +35,10 @@ const ProfilePage = () => {
         setMutualFollowing(response.data.mutual_following);
         setAlreadyFollowing(response.data.already_following);
         setTheyFollowMe(response.data.they_follow_me);
+        setFollowersCount(response.data.followers_count);
+        setFollowingCount(response.data.following_count);
+        setTotalLikes(response.data.total_likes);
         setLoading(false);
-        console.log("profile_data");
-        console.log(id);
-        console.log(response.data);
       } catch (error) {
         setErrors((prev) => [
           ...prev,
@@ -73,15 +77,13 @@ const ProfilePage = () => {
     try {
       await axios.post(`/accept/${id}`);
       if (alreadyFollowing) {
-        // Now both follow each other
         setMutualFollowing(true);
         setTheyFollowMe(false);
-
       } else {
         setTheyFollowMe(true);
       }
   
-      setReceivedRequest(false); // ✅ clear request
+      setReceivedRequest(false);
     } catch (err) {
       console.error("Accept failed", err);
     }
@@ -107,6 +109,10 @@ const ProfilePage = () => {
     }
   }
 
+  const handleFollowClick = (userId, type) => {
+    navigate(`/follows/${userId}/${type}`);
+  };
+
   return (
     <>
       {loading ? (
@@ -130,98 +136,93 @@ const ProfilePage = () => {
               />
 
               <div className="flex flex-col justify-start">
-                <h1 className="text-4xl md:text-6xl font-extrabold text-black uppercase font-sans">
+                <h1 className="mb-4 text-4xl md:text-6xl font-extrabold text-black uppercase font-sans">
                   {(user?.first_name || "") + " " + (user?.last_name || "")}
                 </h1>
 
-                {user.bio && <h2 className="text-md text-gray-500">{user.bio}</h2>}
+                {user.bio && <h2 className=" ml-5 text-md text-black">{user.bio}</h2>}
 
                 {user.id === currentUser.id ? (
-  <button className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-transparent text-black border border-gray-300 rounded-md hover:bg-gray-100 transition">
-    Edit Profile
-  </button>
-) : (
-  <>
-    {/* 🔼 Top: Follow-related button */}
-    { mutualFollowing  ? (
-      <button
-        onClick={handleUnfollow}
-        className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-white text-black border border-gray-300 rounded-md hover:bg-gray-100 transition"
-      >
-        Unfollow
-      </button>
-    ) : theyFollowMe && !alreadyFollowing && !alreadySentRequest ? (
-      <button
-        onClick={handleFollow}
-        className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-blue-500 text-white border border-blue-500 rounded-md hover:bg-blue-600 transition"
-      >
-        Follow Back
-      </button>
-    ) : alreadyFollowing ? (
-      <button
-        onClick={handleUnfollow}
-        className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-white text-black border border-gray-300 rounded-md hover:bg-gray-100 transition"
-      >
-        Following
-      </button>
-    ) : alreadySentRequest ? (
-      <button
-        onClick={handleRemove}
-        className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-white text-black border border-gray-300 rounded-md hover:bg-gray-100 transition"
-      >
-        Request Sent
-      </button>
-    ) : (
-      <button
-        onClick={handleFollow}
-        className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-blue-500 text-white border border-blue-500 rounded-md hover:bg-blue-600 transition"
-      >
-        Follow
-      </button>
-    )}
+                    <button className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-transparent text-black border border-gray-300 rounded-md hover:bg-gray-100 transition">
+                      Edit Profile
+                    </button>
+                  ) : (
+                    <>
+                      { mutualFollowing  ? (
+                        <button
+                          onClick={handleUnfollow}
+                          className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-blue-600 text-white border border-blue-600 rounded-md hover:bg-blue-700 transition"
+                        > 
+                          Unfollow
+                        </button>
+                      ) : theyFollowMe && !alreadyFollowing && !alreadySentRequest ? (
+                        <button
+                          onClick={handleFollow}
+                          className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-blue-600 text-white border border-blue-600 rounded-md hover:bg-blue-700 transition"
+                        >
+                          Follow Back
+                        </button>
+                      ) : alreadyFollowing ? (
+                        <button
+                          onClick={handleUnfollow}
+                          className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-blue-600 text-white border border-blue-600 rounded-md hover:bg-blue-700 transition"
+                        >
+                          Following
+                        </button>
+                      ) : alreadySentRequest ? (
+                        <button
+                          onClick={handleRemove}
+                          className="mt-4 w-40 px-4 py-1 text-sm font-medium bg-gray-600 text-white border border-gray-600 rounded-md hover:bg-gray-700 transition"
+                        >
+                          Cancel Request
+                        </button>
+                      ) : (
+                        <button
+                          onClick={handleFollow}
+                          className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-white text-black border border-black rounded-md hover:bg-black hover:text-white transition"
+                        >
+                          Follow
+                        </button>
+                      )}
 
-    {/* 🔽 Bottom: "User wants to follow you" + Accept/Decline */}
-    {receivedRequest && (
-      <div className="mt-4 space-y-2">
-        <p className="text-sm text-gray-600">
-          {(user?.first_name || "") + " " + (user?.last_name || "")} wants to follow you
-        </p>
-        <div className="flex flex-wrap gap-2">
-          <button
-            onClick={handleAccept}
-            className="w-32 px-4 py-1 text-sm font-medium bg-blue-500 text-white border border-blue-500 rounded-md hover:bg-blue-600 transition"
-          >
-            Accept
-          </button>
-          <button
-            onClick={handleDecline}
-            className="w-32 px-4 py-1 text-sm font-medium bg-white text-black border border-gray-300 rounded-md hover:bg-gray-100 transition"
-          >
-            Decline
-          </button>
-        </div>
-      </div>
-    )}
-  </>
-)}
-
-
-
+                      {receivedRequest && (
+                        <div className="mt-4 space-y-2">
+                          <p className="text-sm text-gray-600">
+                            {(user?.first_name || "") + " " + (user?.last_name || "")} wants to follow you
+                          </p>  
+                          <div className="flex flex-wrap gap-2">
+                            <button
+                              onClick={handleAccept}
+                              className="w-32 px-4 py-1 text-sm font-medium text-white bg-blue-600 rounded hover:bg-blue-700 transition"
+                            >
+                              Accept
+                            </button>
+                            <button
+                              onClick={handleDecline}
+                              className="w-32 px-4 py-1 text-sm font-medium text-white bg-gray-600 rounded hover:bg-gray-700 transition"
+                            >
+                              Decline
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </>
+                  )}
               </div>
             </div>
           </div>
 
           <div className="flex flex-wrap justify-center gap-10 md:gap-40 text-center mb-10">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold font-sans">123</h1>
+            <div onClick={() => handleFollowClick(user.id, 'followers')}>
+              <h1 className="text-3xl md:text-4xl font-extrabold font-sans">{followersCount}</h1>
               <h2 className="text-xs md:text-sm text-gray-500">FOLLOWERS</h2>
             </div>
-            <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold font-sans">12345</h1>
+            <div onClick={() => handleFollowClick(user.id, 'following')}>
+              <h1 className="text-3xl md:text-4xl font-extrabold font-sans">{followingCount}</h1>
               <h2 className="text-xs md:text-sm text-gray-500">FOLLOWING</h2>
             </div>
             <div>
-              <h1 className="text-3xl md:text-4xl font-extrabold font-sans">123</h1>
+              <h1 className="text-3xl md:text-4xl font-extrabold font-sans">{totalLikes}</h1>
               <h2 className="text-xs md:text-sm text-gray-500">LIKES</h2>
             </div>
           </div>
