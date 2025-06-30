@@ -4,15 +4,16 @@ import axios from "axios";
 import showAlert from "./Alert";
 import CurrentUser from "./devise/CurrentUser";
 
-import { DocumentTextIcon, UserCircleIcon, HomeIcon, ArrowLeftStartOnRectangleIcon, UserIcon, BellIcon, BookmarkIcon, MagnifyingGlassIcon, PencilSquareIcon } from "@heroicons/react/24/outline";
-import { DocumentTextIcon as DocumentTextIconSolid, HomeIcon as HomeIconSolid, BellIcon as BellIconSolid, UserIcon as UserSolid, UserGroupIcon as UserGroupIconSolid, BookmarkIcon as BookMarkIconSolid, PencilSquareIcon as PencilSquareIconSolid  } from "@heroicons/react/24/solid";
+import { DocumentTextIcon, UserCircleIcon, HomeIcon, ArrowLeftStartOnRectangleIcon, UserIcon, BellIcon, BookmarkIcon, MagnifyingGlassIcon, PencilSquareIcon, UserGroupIcon } from "@heroicons/react/24/outline";
+import { DocumentTextIcon as DocumentTextIconSolid, HomeIcon as HomeIconSolid, BellIcon as BellIconSolid, UserIcon as UserSolid, UserGroupIcon as UserGroupIconSolid, BookmarkIcon as BookMarkIconSolid, PencilSquareIcon as PencilSquareIconSolid} from "@heroicons/react/24/solid";
 
 
 export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) {
   const navigate = useNavigate();
   const location = useLocation();
   const [user, setUser] = useState(null);
-  const [notifCount, setNotifCount] = useState();
+  const [postNotifCount, setPostNotifCount] = useState();
+  const [friendNotifCount, setFriendNotifCount] = useState();
   const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth < 768);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
@@ -20,7 +21,8 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
     const fetchNotifications = async () => {
       try {
         const response = await axios.get("/counter");
-        setNotifCount(response.data);
+        setPostNotifCount(response.data.postNotifier);
+        setFriendNotifCount(response.data.friendNotifier);
       } catch (error) {
         console.error("Failed to fetch notifications:", error);
       }
@@ -133,10 +135,13 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
             {location.pathname === "/home" ? ( <HomeIconSolid className="h-7 w-7" /> ) : ( <HomeIcon className="h-7 w-7" /> )}
             {!isSmallScreen && <span className="ml-3">Home</span>}
           </Link>
+
+          {/*
           <Link to="/post" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/post" ? "font-bold" : "text-black"}`}>
           {location.pathname === "/post" ? ( <DocumentTextIconSolid className="h-7 w-7" /> ) : ( <DocumentTextIcon className="h-7 w-7" /> )}
             {!isSmallScreen && <span className="ml-3">Post</span>}
           </Link>
+          */}
 
           <Link to="/reading_list" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/reading_list" ? "font-bold" : "text-black"}`}>
           {location.pathname === "/reading_list" ? ( <BookMarkIconSolid className="h-7 w-7" /> ) : ( <BookmarkIcon className="h-7 w-7" /> )}
@@ -148,9 +153,9 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
               
                 <div className="relative">
                   <BellIconSolid className="h-7 w-7" />
-                  {notifCount > 0 && (
+                  {postNotifCount > 0 && (
                     <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[10px] text-center">
-                      {notifCount}
+                      {postNotifCount}
                     </span>
                   )}
                 </div>
@@ -158,14 +163,39 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
             ) : (
               <div className="relative">
                 <BellIcon className="h-7 w-7" />
-                {notifCount > 0 && (
+                {postNotifCount > 0 && (
                   <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center">
-                    {notifCount}
+                    {postNotifCount}
                   </span>
                 )}
               </div>
             )}
             {!isSmallScreen && <span className="ml-3">Notification</span>}
+          </Link>
+
+          <Link to="/friendRequest" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/friendRequest" ? "font-bold" : "text-black" }`}>
+            {location.pathname === "/friendRequest" ? (
+              
+                <div className="relative">
+                  <UserGroupIconSolid className="h-7 w-7" />
+                  {friendNotifCount > 0 && (
+                    <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[10px] text-center">
+                      {friendNotifCount}
+                    </span>
+                  )}
+                </div>
+              
+            ) : (
+              <div className="relative">
+                <UserGroupIcon className="h-7 w-7" />
+                {friendNotifCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-red-500 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full min-w-[16px] text-center">
+                    {friendNotifCount}
+                  </span>
+                )}
+              </div>
+            )}
+            {!isSmallScreen && <span className="ml-3">Friend Request</span>}
           </Link>
 
 

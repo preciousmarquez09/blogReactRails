@@ -36,6 +36,7 @@ class NewCommentNotifier < Noticed::Base
   
   #
   def url
+    
     "/show/#{params[:post].id}"
   end
   

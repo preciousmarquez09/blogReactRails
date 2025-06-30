@@ -142,7 +142,7 @@ const Form = () => {
         });
         showAlert("Saved!", "Post created successfully", "success");
       }
-      navigate("/post"); 
+      navigate("/home"); 
     } catch (error) {
       const status = id ? "Updating" : "Creating";
       showAlert("Error " + status + " Post!", "Please check all the information", "error");
@@ -185,7 +185,6 @@ const Form = () => {
         setFile(null);
         setPreview(null);
   
-        // Only reset file input if removal is confirmed
         if (fileInputRef.current) {
           fileInputRef.current.value = "";
         }
@@ -197,12 +196,12 @@ const Form = () => {
     e.preventDefault();
   
     if (!title && !body) {
-      window.location.href = "/post";
+      window.location.href = "/home";
       return;
     }
     showAlert("Discard post?", "This can't be undone and you'll lose your draft.", "question", "discard").then((result) => {
       if (result.isConfirmed) {
-        window.location.href = "/post";
+        window.location.href = "/home";
       }
     });
   };
@@ -217,7 +216,7 @@ const Form = () => {
       <form onSubmit={handleSubmit} className="bg-white shadow-md rounded-lg p-6 w-full max-w-7xl mx-auto">
      
         <div className="flex items-center justify-between w-full mb-4">
-          <Link to="/post" onClick={(e) => handleDiscard(e, title, body)} className="flex items-center gap-2 text-black px-3 py-2 rounded-md font-semibold transition">
+          <Link to="/home" onClick={(e) => handleDiscard(e, title, body)} className="flex items-center gap-2 text-black px-3 py-2 rounded-md font-semibold transition">
             <ArrowLongLeftIcon className="h-6 w-6" />
             <span>Back</span>
           </Link>

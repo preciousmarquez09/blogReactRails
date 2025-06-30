@@ -8,6 +8,7 @@ import { fetchReadingList, addReadingList, deleteReadingList } from "../readingL
 import { handleLike, handleUnlike } from "../like/Like.jsx";
 import { CalendarDaysIcon, HandThumbUpIcon, ChatBubbleLeftRightIcon, BookmarkIcon } from "@heroicons/react/24/outline";
 import { BookmarkIcon as BookmarkIconSolid, HandThumbUpIcon as HandThumbUpIconSolid } from "@heroicons/react/24/solid";
+import { handleDeletePost } from "./PostFunction.jsx";
 
 const ShowForm = () => {
   const { id } = useParams();
@@ -128,24 +129,15 @@ const ShowForm = () => {
             : addReadingList(postId, setReadingList, readingList, setErrors);
       };
 
-  const deletePost = async (id) => {
-      setErrors([]);
-      console.log(id);
-      // Wait for the confirmation of sweet alert to resolve
-      const result = await showAlert("Are you sure?", "You won't be able to revert this post!", "warning", "delete");
-    
-      if (!result.isConfirmed) return;
-    
-      try {
-        await axios.delete(`/posts/${id}`); // API request to delete post
-    
-        navigate("/home");
-        // Show success alert after deletion
-        showAlert("Deleted!", "Post deleted successfully", "success");
-      } catch (error) {
-        setError("Error deleting post:", error);
-      }
-  };
+    const deletePost = async (id) => {
+      await handleDeletePost(id, setPosts, setErrors);
+      await showAlert("Deleted!", "Post deleted successfully", "success");
+      navigate("/home");
+      setTimeout(() => {
+        window.location.reload();
+      }, 350);      
+    };
+      
 
     const liked = async (postId) => {
       await handleLike(postId, setPosts, setErrors);
