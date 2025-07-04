@@ -6,6 +6,8 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
+  has_one_attached :cover_img
+
   has_many :posts, dependent: :destroy
   has_many :comments, dependent: :destroy
   has_many :reading_list, dependent: :destroy
@@ -51,7 +53,6 @@ class User < ApplicationRecord
   def total_votes_received
     posts.joins(:votes_for).where(votes: { vote_flag: true }).count
   end
-  
   
   
   private

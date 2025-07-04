@@ -128,8 +128,8 @@ const Registration = () => {
             </div>
           </div>
 
-          <button  type="submit" className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300 dark:bg-blue-700 dark:hover:bg-blue-900">
-            Register Account
+          <button  type="submit" className="w-full font-black bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition duration-300 dark:bg-blue-700 dark:hover:bg-blue-900">
+            Create Account
           </button>
 
           

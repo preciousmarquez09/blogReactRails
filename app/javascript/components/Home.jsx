@@ -88,7 +88,7 @@ function Home() {
 
   return (
     <>
-      <form className="max-w-2xl mx-auto mb-5">
+      <form className="max-w-4xl mx-auto mb-5">
         <label htmlFor="search" className="sr-only">Search</label>
         <div className="relative">
           <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -105,7 +105,7 @@ function Home() {
       </nav>
 
       <div className="min-h-screen flex flex-col pb-10 items-center">
-        <div className="w-full max-w-4xl">
+        <div className="w-[85%]">
           {Array.isArray(posts) && posts.length > 0 ? (
             posts.map((p) => (
               <div key={p.id} className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 p-4 flex flex-col-reverse md:flex-row gap-4 transition mb-4">

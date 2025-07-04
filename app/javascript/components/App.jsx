@@ -16,6 +16,7 @@ import ProfilePage from "./profile/ProfilePage";
 import Notification from "./notification/Notification";
 import FriendRequest from "./notification/FriendRequest";
 import FollowLists from "./follow/FollowLists";
+import EditProfile from "./profile/EditProfile";
 
 
 //it protects from cross site request forgery, rails protect csrf attack by requiring a token for a non-GET requests
@@ -118,6 +119,7 @@ const AppContent = () => {
             <Route path="/create" element={pageCheck(isAuthenticated, <Form />)} />
             <Route path="/reading_list" element={pageCheck(isAuthenticated, <ReadingList />)} />
             <Route path="/profile/:id" element={pageCheck(isAuthenticated, <ProfilePage />)} />
+            <Route path="/editProfile" element={pageCheck(isAuthenticated, <EditProfile />)} />
             <Route path="/friendRequest" element={pageCheck(isAuthenticated, <FriendRequest />)} />
             <Route path="/notification" element={pageCheck(isAuthenticated, <Notification />)} />
             <Route path="/follows/:userId/:type" element={pageCheck(isAuthenticated, <FollowLists />)} />
@@ -129,11 +131,13 @@ const AppContent = () => {
             <Route path="/login" element={<Login onLoginSuccess={handleLoginSuccess} refreshCsrfToken={refreshCsrfToken} />} />
           </Routes>
         </div>
+        {/* 
         {isAuthenticated && !location.pathname.startsWith("/edit/") && location.pathname !== "/create" && !location.pathname.startsWith("/show/") && (
           <div className="w-1/5 p-4 hidden md:block" key={location.pathname}>
             <RightNavbar />
           </div>
         )}
+           */}
 
       {!isAuthenticated && ( <Footer /> )}
       </div>

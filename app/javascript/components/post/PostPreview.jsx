@@ -64,7 +64,7 @@ const PostPreview = ({ id }) => {
 
   return (
     <div className="min-h-screen flex flex-col pb-10 items-center">
-        <div className="w-full max-w-4xl">
+        <div className=" w-[88%]">
                 {Array.isArray(posts) && posts.length > 0 ? (
                     posts.map((p) => (
                     <div key={p.id} className="bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700 p-4 flex flex-col-reverse md:flex-row gap-4 transition mb-4">

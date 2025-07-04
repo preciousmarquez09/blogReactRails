@@ -113,6 +113,10 @@ const ProfilePage = () => {
     navigate(`/follows/${userId}/${type}`);
   };
 
+  const goToEditProfile = () => {
+    navigate("/editProfile");
+  };
+
   return (
     <>
       {loading ? (
@@ -128,22 +132,23 @@ const ProfilePage = () => {
           )}
 
           <div className="flex justify-center mb-10">
-            <div className="flex gap-6 text-left w-full max-w-4xl">
+            <div className="flex gap-6 text-left w-[80%]">
               <img
                 className="rounded-full w-24 h-24 object-cover"
                 src={user?.coverimg_url || "/assets/img/image.png"}
                 alt="Profile Picture"
               />
 
-              <div className="flex flex-col justify-start">
+              <div className="flex flex-col justify-start w-[80%]">
                 <h1 className="mb-4 text-4xl md:text-6xl font-extrabold text-black uppercase font-sans">
                   {(user?.first_name || "") + " " + (user?.last_name || "")}
                 </h1>
 
-                {user.bio && <h2 className=" ml-5 text-md text-black">{user.bio}</h2>}
+                {user?.bio && <h2 className=" ml-5 text-md text-black">{user?.bio}</h2>}
 
                 {user.id === currentUser.id ? (
-                    <button className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-transparent text-black border border-gray-300 rounded-md hover:bg-gray-100 transition">
+                    <button onClick={goToEditProfile}
+                      className="mt-4 w-32 px-4 py-1 text-sm font-medium bg-transparent text-black border border-gray-300 rounded-md hover:bg-gray-100 transition">
                       Edit Profile
                     </button>
                   ) : (

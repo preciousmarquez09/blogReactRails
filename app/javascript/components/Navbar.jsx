@@ -131,7 +131,7 @@ export default function Navbar({ isAuthenticated, onLogout, refreshCsrfToken }) 
 
         <nav className="flex flex-col gap-4 p-2 mt-12 flex-1">
        
-          <Link to="/home" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/" ? "font-bold" : "text-black"}`}>
+          <Link to="/home" className={`flex items-center p-2 transition w-full hover:bg-gray-200 hover:rounded-2xl ${location.pathname === "/home" ? "font-bold" : "text-black"}`}>
             {location.pathname === "/home" ? ( <HomeIconSolid className="h-7 w-7" /> ) : ( <HomeIcon className="h-7 w-7" /> )}
             {!isSmallScreen && <span className="ml-3">Home</span>}
           </Link>
