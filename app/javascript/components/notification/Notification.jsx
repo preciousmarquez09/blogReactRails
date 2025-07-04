@@ -44,12 +44,13 @@ const Notification = () => {
   }
 
   return (
-    <div className="p-4 rounded-lg shadow-sm">
+    <div className=" p-4 rounded-lg shadow-sm">
       <h1 className="text-xl font-bold mb-4">Notifications</h1>
       {notifications.length === 0 ? (
         <p>No notifications.</p>
       ) : (
-        <>
+        <div className="px-5">
+
           {notifications.map((notif) => (
             <button
               key={notif.id}
@@ -105,7 +106,7 @@ const Notification = () => {
           
           
           )}
-        </>
+        </div>
       )}
     </div>
   )
