@@ -24,7 +24,7 @@ class NotificationController < ApplicationController
       actor_data = actor_user && {
         id: actor_user.id,
         name: "#{actor_user.first_name} #{actor_user.last_name}",
-        # coverimg_url: actor_user.coverimg.attached? ? url_for(actor_user.coverimg) : nil
+        cover_img: actor_user.cover_img.attached? ? url_for(actor_user.cover_img) : nil
       }
   
       post = params[:post]
@@ -71,7 +71,8 @@ class NotificationController < ApplicationController
           id: user.id,
           first_name: user.first_name,
           last_name: user.last_name,
-          email: user.email
+          email: user.email,
+          cover_img: user.cover_img.attached? ? url_for(user.cover_img) : nil
         }
       }
     end

@@ -9,7 +9,6 @@ export const fetchReadingList = async (searchQuery, setReadingList, setErrors) =
             }
           });
         setReadingList(response.data.reading_list);
-        console.log(response.data.reading_list);
     } catch (error) {
         setErrors(["Error fetching reading list:", error]);
     }

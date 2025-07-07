@@ -135,7 +135,7 @@ const ProfilePage = () => {
             <div className="flex gap-6 text-left w-[80%]">
               <img
                 className="rounded-full w-24 h-24 object-cover"
-                src={user?.coverimg_url || "/assets/img/image.png"}
+                src={user?.cover_img || "/assets/img/image.png"}
                 alt="Profile Picture"
               />
 

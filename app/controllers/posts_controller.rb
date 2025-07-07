@@ -11,7 +11,12 @@ class PostsController < ApplicationController
 
   def current_user_info
     user = User.find_by(id: params[:id])
-    render json: { user: user, current_user: current_user,
+    render json: {  user: user.as_json.merge(
+      cover_img: user.cover_img.attached? ? url_for(user.cover_img) : nil
+    ),
+    current_user: current_user.as_json.merge(
+      cover_img: current_user.cover_img.attached? ? url_for(current_user.cover_img) : nil
+    ),
     total_likes: user.total_votes_received, 
     already_sent_request: current_user.sent_follow_request_to?(user),
     already_following: current_user.following?(user),
@@ -43,19 +48,30 @@ class PostsController < ApplicationController
     @posts = posts_scope.order(created_at: :desc)
   
     render json: {
-      posts: @posts.map { |post|
-        post.as_json(
+      posts: @posts.map do |post|
+        post_json = post.as_json(
           include: {
             user: { only: [:id, :first_name, :last_name] },
             comments: {}
           },
-          methods: [:coverimg_url]
+          methods: [:coverimg_url] # optional if your Post model has image
         ).merge(
           likes_count: post.likes_count,
           liked_by_current_user: post.liked_by?(current_user)
         )
-      },
-      current_user: current_user ? current_user.as_json(only: [:id, :first_name, :last_name, :email]) : {}
+
+        # Inject cover_img URL into the nested user
+        post_json["user"].merge!(
+          cover_img: post.user.cover_img.attached? ? url_for(post.user.cover_img) : nil
+        )
+
+        post_json
+      end,
+      current_user: current_user ? current_user.as_json(
+        only: [:id, :first_name, :last_name, :email]
+      ).merge(
+        cover_img: current_user.cover_img.attached? ? url_for(current_user.cover_img) : nil
+      ) : {}
     }
   end
   
@@ -81,8 +97,8 @@ class PostsController < ApplicationController
   
       render json: {
         posts: posts_json,
-        user: user.as_json(only: [:id, :first_name, :last_name, :email, :bio, :birthday]),
-        current_user: current_user.as_json(only: [:id, :first_name, :last_name, :email])
+        user: user.as_json(only: [:id, :first_name, :last_name, :email, :bio, :birthday]).merge(cover_img: user.cover_img.attached? ? url_for(user.cover_img) : nil),
+        current_user: current_user.as_json(only: [:id, :first_name, :last_name, :email]).merge(cover_img: current_user.cover_img.attached? ? url_for(current_user.cover_img) : nil)
       }
     else
       render json: { errors: "User not found" }, status: :not_found
