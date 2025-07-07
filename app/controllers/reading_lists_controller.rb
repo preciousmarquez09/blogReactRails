@@ -19,18 +19,25 @@ class ReadingListsController < ApplicationController
                                .includes(post: [:comments, :user])
   
     render json: {
-      reading_list: @reading_list.as_json(
-        include: {
-          post: {
-            include: {
-              comments: {},
-              user: { only: [:id, :first_name, :last_name] }
-            },
-            methods: [:coverimg_url]
+      reading_list: @reading_list.map do |item|
+        post = item.post
+
+        post_json = post.as_json(
+          include: {
+            comments: {},
+            user: { only: [:id, :first_name, :last_name] }
           }
-        }
-      )
+        )
+
+        # Inject cover_img into nested user
+        post_json["user"].merge!(
+          cover_img: post.user.cover_img.attached? ? url_for(post.user.cover_img) : nil
+        )
+
+        item.as_json.merge(post: post_json)
+      end
     }
+
   end
   
   

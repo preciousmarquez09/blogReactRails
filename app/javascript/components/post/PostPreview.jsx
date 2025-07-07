@@ -72,7 +72,7 @@ const PostPreview = ({ id }) => {
                         {/* Profile pic, name, and date */}
                         <div className="flex items-center gap-2">
                             <Link to={`/profile/${p.user.id}`} className="w-10 h-10 flex-shrink-0">
-                                <img className="rounded-full w-full h-full object-cover" src="/assets/img/image.png" alt="Profile" />
+                                <img className="rounded-full w-full h-full object-cover" src={user?.cover_img || "/assets/img/image.png"} alt="Profile" />
                             </Link>
                             <div className="flex flex-col">
                             <Link to={`/profile/${p.user.id}`}  className="text-sm font-semibold text-gray-900 dark:text-white hover:underline">

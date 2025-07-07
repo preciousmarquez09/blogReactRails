@@ -45,7 +45,7 @@ function Home() {
         const response = await axios.get('/posts', {
           params: {
             'q[title_or_description_or_user_first_name_or_user_last_name_cont]': debouncedSearchQuery,
-            tab: activeTab // <-- send active tab as param
+            tab: activeTab
           }
         });
         setPosts(response.data.posts);
@@ -113,7 +113,7 @@ function Home() {
                   {/* Profile pic, name, and date */}
                   <div className="flex items-center gap-2">
                     <Link to={`/profile/${p.user.id}`} className="w-10 h-10 flex-shrink-0">
-                      <img className="rounded-full w-full h-full object-cover" src="/assets/img/image.png" alt="Profile" />
+                      <img className="rounded-full w-full h-full object-cover" src={p.user?.cover_img || "/assets/img/image.png"} alt="Profile" />
                     </Link>
                     <div className="flex flex-col">
                       <Link to={`/profile/${p.user.id}`}  className="text-sm font-semibold text-gray-900 dark:text-white hover:underline">

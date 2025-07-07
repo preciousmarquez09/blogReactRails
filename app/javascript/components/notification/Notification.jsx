@@ -62,7 +62,7 @@ const Notification = () => {
               {/* Profile Picture */}
               {notif.actor?.name ? (
                 <img
-                  src={notif.actor.coverimg_url || "/assets/img/image.png"}
+                  src={notif.actor.cover_img || "/assets/img/image.png"}
                   alt={notif.actor.name}
                   className="w-12 h-12 rounded-full object-cover"
                 />

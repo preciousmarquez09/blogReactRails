@@ -67,10 +67,10 @@ const FriendRequest = () => {
           } border-b border-gray-200 dark:bg-gray-800 dark:border-gray-700 flex items-center gap-4 w-full text-left pointer-cursor`}
         >
           {/* Profile Picture */}
-          {friend.actor?.coverimg_url ? (
+          {friend.user?.cover_img ? (
             <img
-              src={friend.actor.coverimg_url}
-              alt={friend.actor.name}
+              src={friend.user.cover_img}
+              alt={friend.user.name}
               className="w-12 h-12 rounded-full object-cover"
             />
           ) : (
